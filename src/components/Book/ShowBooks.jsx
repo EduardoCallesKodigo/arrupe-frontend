@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 const endpoint = 'http://127.0.0.1:8000/api';
@@ -18,10 +19,15 @@ const ShowBooks = () => {
         setBooks(response.data);
     }
 
+    const deleteBook = async (id) => {
+        await axios.delete(`${endpoint}/books/${id}`);
+        getAllBooks();
+    }
+
     return (
         <div>
             <div className="d-grid gap-2">
-                Boton Crear un nuevo libro
+                <Link to={'/createBook'} className="btn btn-success btn-lg mb-2 text-white">Crear un nuevo libro</Link>
             </div>
             <table className="table table-striped">
                 <thead className="bg-primary text-white">
@@ -38,7 +44,10 @@ const ShowBooks = () => {
                         <td>{book.isbn}</td>
                         <td>{book.title}</td>
                         <td>{book.date_pub}</td>
-                        <td></td>
+                        <td>
+                            <Link to={`/editBook/${book.id}`} className="btn btn-warning">Editar</Link>
+                            <button onClick={ () => deleteBook(book.id) } className="btn btn-danger">Eliminar</button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
